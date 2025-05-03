@@ -1,10 +1,6 @@
 import numpy as np
 import pandas as pd
-
-alpha = 0.1
-data_size = 1000000
-epochs = 1500
-
+import matplotlib.pyplot as plt
 
 def data_split(data: pd.DataFrame, train_ratio=0.8) -> (pd.DataFrame, pd.DataFrame):
     train = data.sample(frac=train_ratio)
@@ -65,3 +61,15 @@ def get_acc(y_test, y_pred):
     correct = np.sum(predicted == y_test)
     total = y_test.size
     return 100 * correct / total
+
+def cor(df1, df2, default):
+    plt.figure(figsize=(10, 6))
+    scatter = plt.scatter(
+        df1,
+        df2,
+        c=default,
+        cmap='coolwarm',
+        alpha=0.7
+    )
+    plt.grid(True)
+    plt.show()
