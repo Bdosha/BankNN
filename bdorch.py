@@ -3,30 +3,36 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def data_split(data: pd.DataFrame, train_ratio=0.8) -> (pd.DataFrame, pd.DataFrame):
+    """Разбиение датасета на обучающую и тестовую выборки по коэф"""
     train = data.sample(frac=train_ratio)
     test = data.drop(train.index)
     return train, test
 
 
 def get_xy(data: pd.DataFrame):
+    """Разбиение на Х и У"""
     return data[[i for i in data.keys() if i != 'Дефолт']], data['Дефолт']
 
 
 def scale_data(data):
+    """Нормирование данных"""
     return (data - data.mean()) / data.std()
 
 
 def sigmoid(x):
+    """Функция сигмоиды"""
     x = np.clip(x, -500, 500)
     return 1 / (1 + np.exp(-x))
 
 
 def cross_entropy(y, y_pred) -> np.ndarray:
+    """Бинарная кросс-энтропия"""
     y_pred = np.clip(y_pred, 1e-5, 1 - 1e-5)
     return - 1 / y.size * np.sum(y * np.log(y_pred) + (1 - y) * np.log(1 - y_pred))
 
 
 def w_grad(x, y, y_pred):
+    """Вычисление градиента для веса"""
     x = np.array(x, dtype=np.float64)
     y = np.array(y.values, dtype=np.float64)
     y_pred = np.array(y_pred, dtype=np.float64)
@@ -37,6 +43,7 @@ def w_grad(x, y, y_pred):
 
 
 def b_grad(y, y_pred):
+    """Вычисление градиента для сдвига"""
     y = np.array(y.values, dtype=np.float64)
     y_pred = np.array(y_pred, dtype=np.float64)
 
@@ -57,6 +64,7 @@ class Perceptron:
 
 
 def get_acc(y_test, y_pred):
+    """Вычисление точности"""
     predicted = (y_pred > 0.5).astype(np.float32)
     correct = np.sum(predicted == y_test)
     total = y_test.size
